@@ -13,17 +13,25 @@ from django.views import generic
 from django import forms
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
+from events_operations.models import Event, Assist
+from django.db.models import Q
 
 class mainUsers(View):
     template = 'users/index.html'
     context = {'title': 'Main users page'}
 
     def get(self, request):
-        """
-            Main users page.
-        """
-        print("Main users page request")
-        return render(request, self.template, self.context)
+        queryset = request.GET.get("buscar")
+        if queryset:
+            event = Event.objects.filter(
+                Q(name__icontains=queryset) |
+                Q(description__icontains=queryset)
+                ).distinct()
+            print(event)
+            return render(request, 'users/results.html', {'event':event})
+        else:
+            return render(request, self.template, self.context)
+
 
 def register_attendee(request):
         if request.method == 'POST':
@@ -180,3 +188,24 @@ class register_Staff(CreateView):
     success_message = 'Staff creado correctamente !'
     def get_success_url(self):
         return reverse('events_operations:details')
+
+class invitationsList(ListView):
+    model = Assist
+    template_name = 'users/invitations.html'
+    ordering = ['id']
+
+class assistanceList(ListView):
+    model = Assist
+    template_name = 'users/assistance.html'
+    ordering = ['id']
+
+
+"""def getResults(request):
+    queryset = request.GET.get("buscar")
+    event = Event.objects.filter(
+        Q(name__icontains=queryset) |
+        Q(description__icontains=queryset)
+    ).distinct()
+    print(event)
+    return render(request, 'users/results.html', {'event':event})
+"""
