@@ -27,14 +27,17 @@ class mainUsers(View):
 
 def register_attendee(request):
         if request.method == 'POST':
-                form = attendeesForm(request.POST)
+                form = attendeesForm(request.POST,request.FILES)
+                print("dentro de post")
                 if form.is_valid():
+                        print("es valido")
                         form.save()
                         name = request.POST.get('name')
                         email = request.POST.get('email')
                         password = request.POST.get('password')
                         photo_id = request.POST.get('photo_id')
                         qr_code = request.POST.get('qr_code')
+
 
                         attendees_body = render_to_string(
                         'users/email_attendee_registration.html', {
@@ -56,7 +59,13 @@ def register_attendee(request):
                         attendees_email_message.content_subtype = 'html'
                         attendees_email_message.send()
                         print("------Enviando notificaciones por email------")
-                return redirect('events_operations:details')
+                        return redirect('events_operations:details')
+                else:
+                    print(form.errors)
+                    return render(request, 'users/attendees_form.html', {'form':form})
+
+
+
         else:
                 form = attendeesForm()
         return render(request, 'users/attendees_form.html', {'form':form})
@@ -104,6 +113,7 @@ def register_organizer(request):
 def register_staff(request):
         if request.method == 'POST':
                 form = staffForm(request.POST)
+                print("dentro del post")
                 if form.is_valid():
                         form.save()
                         name = request.POST.get('name')
@@ -111,6 +121,7 @@ def register_staff(request):
                         password = request.POST.get('password')
                         photo_id = request.POST.get('photo_id')
                         working_hours = request.POST.get('working_hours')
+                        print("es valido")
 
                         staff_body = render_to_string(
                         'users/email_staff_registration.html', {
@@ -169,4 +180,3 @@ class register_Staff(CreateView):
     success_message = 'Staff creado correctamente !'
     def get_success_url(self):
         return reverse('events_operations:details')
-

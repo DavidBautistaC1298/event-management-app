@@ -22,14 +22,14 @@
 	     height: 100%;
 	 }
 	 .hero-background.is-transparent {
-	     opacity: 0.3;
+	     opacity: 1.3;
 	 }
 	 table-background-color:red;
 	</style>
     </head>
     <body>
 	<section class="hero is-fullheight has-background">
-	    <img alt="Fill Murray" class="hero-background is-transparent" src="../../static/img/concert3.jpeg">
+	    <img alt="Fill Murray" class="hero-background is-transparent" src="../../static/img/concert11.jpeg">
 	    <div class="hero-body">
 		<div class="container has-text-centered">
 		    <div class="column is-4 is-offset-4">
@@ -37,15 +37,25 @@
 			    <p class="subtitle is-4 has-text-grey">Registrar staff.</p><br>
 
 			    {% block content %}
-			    <form method="post">
+			    <form method="post" enctype="multipart/form-data>
 				{% csrf_token %}
-				{{ form.as_p }}
+        <!--{{ form.as_p }}-->
+        <div align="center">Nombre</div>
+        {{form.name}}
+        <div align="center">Email</div>
+        {{form.email}}
+        <div align="center">Password</div>
+        {{form.password}}
+        <div align="center">Fotografia</div>
+        {{form.photo_id}}
+        <div align="center">Horas de disponibilidad</div>
+        {{form.working_hours}}<br><br>
 				<button class="button is-success" is-fullwidth"
 					       type="submit">Registrar</button>
 			    </form>
 			    {% endblock %}
 
-			    
+
 			</div>
 		    </div>
 		</div>
